@@ -1,6 +1,5 @@
 package com.example.demo.server;
 
-
 import org.json.simple.parser.ParseException;
 
 import java.io.BufferedReader;
@@ -10,6 +9,16 @@ import java.util.*;
 
 public class ServerMain {
     private List<String> lines =  new ArrayList<>();
+    private Dictionary dic;
+
+    public ServerMain() {
+        this.dic = new Dictionary("dic.xlsx");
+    }
+
+    public List<String> getKeys() {
+        return this.dic.getKeys();
+    }
+
     public static String sendCommand(String[] command) {
         ProcessBuilder processBuilder = new ProcessBuilder(command);
         Process client;
@@ -42,7 +51,7 @@ public class ServerMain {
     }
 
 
-    public static List<Integer> evaluateOutput(String output , String stroy) throws IOException, ParseException {
+    public List<Integer> evaluateOutput(String output , String stroy) throws IOException, ParseException {
         List<Integer> list = new ArrayList<>();
         CreateJson createJson = new CreateJson();
         createJson.CreatingFile("ans" , output);
@@ -80,6 +89,10 @@ public class ServerMain {
         list.add(imperative);
         int numOfwords = answers3.NumOfWords();
         list.add(numOfwords);
+        Map<String, Integer> dictWord = this.dic.parserAns(stroy);
+        for (Map.Entry<String, Integer> entry : dictWord.entrySet()) {
+           list.add(entry.getValue());
+        }
         return  list;
     }
 
@@ -100,8 +113,8 @@ public class ServerMain {
             i++;
         }
         System.out.println("connected");
+        this.dic.parser();
         for (String line: lines) {
-            System.out.println("current line is:" + line);
             command[7] = "{\"text\": \""+line+"  \"}";
             output = sendCommand(command);
             numbers = evaluateOutput(output , line);

@@ -4,6 +4,7 @@ package com.example.demo.controller;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.io.IOException;
 
 import com.example.demo.server.ReadExcelFileDemo;
 import com.example.demo.server.ServerMain;
@@ -49,7 +50,7 @@ public class FilesController {
                 ServerMain serverMain = new ServerMain();
                 Map<String, List<Integer>> ans = serverMain.processData(sentences);
                 WritingAns writer = new WritingAns();
-                writer.editFile(ans, "uploads/" + file.getOriginalFilename());
+                writer.editFile(ans, "uploads/" + file.getOriginalFilename(), serverMain.getKeys());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -69,15 +70,15 @@ public class FilesController {
 
             return new FileInfo(filename, url);
         }).collect(Collectors.toList());
-
         return ResponseEntity.status(HttpStatus.OK).body(fileInfos);
     }
 
     @GetMapping("/files/{filename:.+}")
     @ResponseBody
-    public ResponseEntity<Resource> getFile(@PathVariable String filename) {
+    public ResponseEntity<FileInfo> getFile(@PathVariable String filename) throws IOException {
         Resource file = storageService.load(filename);
+        FileInfo fileInfo =  new FileInfo(file.getFilename() , file.getURL().toString());
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(fileInfo);
     }
 }

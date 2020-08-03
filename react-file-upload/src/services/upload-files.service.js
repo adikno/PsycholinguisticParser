@@ -14,8 +14,8 @@ class UploadFilesService {
     });
   }
 
-  getFiles() {
-    return http.get("/files");
+  getFiles(filename) {
+    return http.get("/files/" + filename);
   }
 }
 

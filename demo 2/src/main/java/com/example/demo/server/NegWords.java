@@ -29,7 +29,6 @@ public class NegWords implements YapExtractAns {
     // need to check what about the case per = A
     public int parserAns() throws IOException, ParseException {
         this.decodingJson();
-        System.out.println(decodeAns);
         int counter = 0;
         String[] words = decodeAns.split("\n");
         String[] attribute;

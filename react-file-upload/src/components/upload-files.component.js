@@ -41,9 +41,10 @@ export default class UploadFiles extends Component {
 			this.setState({
 			message: response.data.message,
 			});
-			return UploadService.getFiles();
+			return UploadService.getFiles(currentFile.name);
 		})
 		.then((files) => {
+			console.log(files);
 			this.setState({
 			fileInfos: files.data,
 			loading :false
@@ -61,12 +62,6 @@ export default class UploadFiles extends Component {
 		selectedFiles: undefined,
 		});
 	}
-	componentDidMount() {
-		UploadService.getFiles().then((response) => {
-		this.setState({
-			fileInfos: response.data,
-		});
-		});}
 
 
     render() {
@@ -78,6 +73,8 @@ export default class UploadFiles extends Component {
 		  fileInfos,
 		  loading
 		} = this.state;
+
+		console.log(fileInfos);
 	
 		return (
 		  <div className="upload-file-wrapper">
@@ -105,19 +102,20 @@ export default class UploadFiles extends Component {
 				Upload
 				</button>
 			</div>
-	
-			
+
+			<div className="alert alert-light" role="alert">
+			  {message}
+			</div>
 
 			<div className='process-data'> {loading? <LoadingSpinner /> :fileInfos > 0 && 'File is ready'}</div>
 			<div className="card">
 			  <div className="card-header">List of output files</div>
 			  <ul className="list-group list-group-flush">
-				{fileInfos &&
-				  fileInfos.map((file, index) => (
-					<li className="list-group-item" key={index}>
-					  <a href={file.url}>{file.name}</a>
+				{fileInfos &&(
+					<li className="list-group-item">
+					  <a href={fileInfos.url}>{fileInfos.name}</a>
 					</li>
-				  ))}
+				  )}
 			  </ul>
 			</div>
 		  </div>
