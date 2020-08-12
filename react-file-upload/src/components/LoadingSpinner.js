@@ -5,7 +5,7 @@ import "./LoadingSpinner.css";
 
 const LoadingSpinner = () => (
   <div>
-	File is been processing
+	File is being processed
 	<Loader className="loader" type="ThreeDots" color="#00BFFF" height={60} width={60}  />
   </div>
 );
