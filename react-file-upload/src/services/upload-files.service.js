@@ -17,6 +17,10 @@ class UploadFilesService {
   getFiles(filename) {
     return http.get("/files/" + filename);
   }
+
+  getFilesToShow(filename) {
+    return http.get("/files/fileInfo/" + filename);
+  }
 }
 
 export default new UploadFilesService();

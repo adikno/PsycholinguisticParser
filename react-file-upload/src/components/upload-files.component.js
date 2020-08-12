@@ -13,6 +13,7 @@ export default class UploadFiles extends Component {
 		currentFile: undefined,
 		progress: 0,
 		message: "",
+		id: "",
 		fileInfos: [],
 		loading: false
 	  };
@@ -40,8 +41,9 @@ export default class UploadFiles extends Component {
 		.then((response) => {
 			this.setState({
 			message: response.data.message,
+			id: response.data.id
 			});
-			return UploadService.getFiles(currentFile.name);
+			return UploadService.getFilesToShow(this.state.id);
 		})
 		.then((files) => {
 			console.log(files);

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.io.IOException;
+import java.util.Random; 
+
 
 import com.example.demo.server.ReadExcelFileDemo;
 import com.example.demo.server.ServerMain;
@@ -39,46 +41,48 @@ public class FilesController {
     @PostMapping("/upload")
     public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
         String message = "";
+        Random rand = new Random(); 
+        int rand_int = rand.nextInt(1000000); 
+        String id = Integer.toString(rand_int);
+        String name = id + "_" + file.getOriginalFilename(); 
         try {
-            storageService.save(file);
+            storageService.save(file, name);
 
             message = "Uploaded the file successfully: " + file.getOriginalFilename();
-            ReadExcelFileDemo demo = new ReadExcelFileDemo("uploads/" +  file.getOriginalFilename());
+            ReadExcelFileDemo demo = new ReadExcelFileDemo("uploads/" +  name);
             try {
                 demo.parser();
                 List<String> sentences = demo.getSentences();
                 ServerMain serverMain = new ServerMain();
                 Map<String, List<Integer>> ans = serverMain.processData(sentences);
                 WritingAns writer = new WritingAns();
-                writer.editFile(ans, "uploads/" + file.getOriginalFilename(), serverMain.getKeys());
+                writer.editFile(ans, "uploads/" +  name , serverMain.getKeys());
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message ,name));
         } catch (Exception e) {
+            System.out.println(e.toString());
             message = "Could not upload the file: " + file.getOriginalFilename() + "!";
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message, name));
         }
     }
-
-    @GetMapping("/files")
-    public ResponseEntity<List<FileInfo>> getListFiles() {
-        List<FileInfo> fileInfos = storageService.loadAll().map(path -> {
-            String filename = path.getFileName().toString();
-            String url = MvcUriComponentsBuilder
-                    .fromMethodName(FilesController.class, "getFile", path.getFileName().toString()).build().toString();
-
-            return new FileInfo(filename, url);
-        }).collect(Collectors.toList());
-        return ResponseEntity.status(HttpStatus.OK).body(fileInfos);
+    @GetMapping("/files/fileInfo/{filename:.+}")
+    @ResponseBody
+    public ResponseEntity<FileInfo> getFileToShow(@PathVariable String filename) throws IOException {
+        Resource file = storageService.load(filename);
+        String url = MvcUriComponentsBuilder
+        .fromMethodName(FilesController.class, "getFile",file.getFilename()).build().toString();
+        String nameOfFile = file.getFilename().split("_")[1];
+        FileInfo fileInfo =  new FileInfo(nameOfFile , url);
+        return ResponseEntity.status(HttpStatus.OK).body(fileInfo);
     }
 
     @GetMapping("/files/{filename:.+}")
     @ResponseBody
-    public ResponseEntity<FileInfo> getFile(@PathVariable String filename) throws IOException {
+    public ResponseEntity<Resource> getFile(@PathVariable String filename) {
         Resource file = storageService.load(filename);
-        FileInfo fileInfo =  new FileInfo(file.getFilename() , file.getURL().toString());
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(fileInfo);
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 }
