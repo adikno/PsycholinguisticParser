@@ -53,7 +53,7 @@ public class ReadExcelFileDemo {
                 Cell cell = cellIterator.next();
                 switch (cell.getCellType()) {
                     case Cell.CELL_TYPE_STRING:
-                        sentence +=(cell.getStringCellValue()) + " ";
+                        sentence +=(cell.getStringCellValue().replace("\n", " ").replace("\t", " ").replace("\"", "")) + " ";
                         break;
                     case Cell.CELL_TYPE_NUMERIC:
                         sentence +=(cell.getNumericCellValue()) + " ";
