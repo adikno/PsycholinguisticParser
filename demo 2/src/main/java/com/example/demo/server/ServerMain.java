@@ -103,25 +103,26 @@ public class ServerMain {
                 "http://localhost:8000/yap/heb/joint", "|", "jq", "."};
         List<Integer> numbers = new ArrayList<>();
         numbers.clear();
-        String output;
-        command[7] = "{\"text\": \"מחכה שהשרת יעלה  \"}";
-        System.out.println("waiting for server to connect");
-        output = sendCommand(command);
-        int i = 0;
-        while (output.length() == 0) {
-            output = sendCommand(command);
-            i++;
-        }
-        System.out.println("connected");
+
+        String output = "";
+        int i = 1;
         this.dic.parser();
         for (String line: lines) {
-            command[7] = "{\"text\": \""+line+"  \"}";
-            output = sendCommand(command);
+
+            command[7] = "{\"text\": \"" + line + "  \"}";
+            try {
+                while (output.length() == 0) {
+                    output = sendCommand(command);
+                }
+            } catch (Exception e) {}
+            System.out.println("succeeded line number " + i);
             numbers = evaluateOutput(output , line);
             evlAns.put(line, numbers);
+            
+            output = "";
+            i++;
         }
         return evlAns;
-
     }
 
 }
