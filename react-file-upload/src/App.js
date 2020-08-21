@@ -17,19 +17,25 @@ function App() {
       <footer className='about'>
             Psycholinguistic Parser
             A websidte for parsing transcripts of meetings between psychologists and clients.
+            <br/>
             Built following the below artical:
+            <br/>
+            <br/>
             <a href=" https://www.researchgate.net/publication/340595443_Using_Computerized_Text_Analysis_to_Examine_Associations_Between_Linguistic_Features_and_Clients'_Distress_during_Psychotherapy"> https://www.researchgate.net/publication/340595443_Using_Computerized_Text_Analysis_to_Examine_Associations_Between_Linguistic_Features_and_Clients'_Distress_during_Psychotherapy </a>
             <br/>
             Shapira, N., Lazarus, G., Goldberg, Y., Gilboa-Schechtman, E., Tuval-Mashiach, R., Juravski, D., & Atzil-Slonim, D. (2020). 
             <br/>
             Using Computerized Text Analysis to Examine Associations Between Linguistic Features and Clients’ Distress during Psychotherapy. Journal of counseling psychology.  
             <br/>
+            <br/>
             The website support .xlsx files only.
 
             File must not exceed 2Mb.
             <br/>
             Written by Michal Abramovitch and Adi Knobel as part of their BA in Computer science in Bar Ilan University.
+            <br/>
             Guided by Natalie Shapira.
+            <br/>
             Questions, comments and feedback are welcome at: nd1234@gmail.com.
 
         </footer>

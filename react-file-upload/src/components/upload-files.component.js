@@ -4,7 +4,7 @@ import LoadingSpinner from './LoadingSpinner';
 import "./upload-files.css";
 import before from './brfore.png';
 import after from './after.png';
-import ins from './ins.docx'
+import ins from './ins.pdf'
 
 
 export default class UploadFiles extends Component {
@@ -118,7 +118,7 @@ export default class UploadFiles extends Component {
 			  <ul className="list-group list-group-flush">
 				{fileInfos &&(
 					<li className="list-group-item">
-					  <a href={fileInfos.url}>{fileInfos.name}</a>
+					  <a target={fileInfos.url}>{fileInfos.name}</a>
 					</li>
 				  )}
 			  </ul>
