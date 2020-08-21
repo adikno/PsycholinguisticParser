@@ -51,49 +51,67 @@ public class ServerMain {
     }
 
 
-    public List<Integer> evaluateOutput(String output , String stroy) throws IOException, ParseException {
+    public List<Integer> evaluateOutput(String output , String stroy, Boolean yap) throws IOException, ParseException {
         List<Integer> list = new ArrayList<>();
-        CreateJson createJson = new CreateJson();
-        createJson.CreatingFile("ans" , output);
-        FirstPerson answers = new FirstPerson("ans.json");
-        YapExtractAns answers1 = new QWwords("ans.json");
-        YapExtractAns answers2 = new NegWords("ans.json");
-        Tenses answers4 =  new Tenses("ans.json");
         TextualExtractAns answers3 = new TextualExtractAns(stroy);
+        if (yap) {
+            CreateJson createJson = new CreateJson();
+            createJson.CreatingFile("ans" , output);
+            FirstPerson answers = new FirstPerson("ans.json");
+            YapExtractAns answers1 = new QWwords("ans.json");
+            YapExtractAns answers2 = new NegWords("ans.json");
+            Tenses answers4 =  new Tenses("ans.json");
 
-        answers.parserAns();
-        int numOfFirstSingle = answers.getFirstCounterSingle();
-        list.add(numOfFirstSingle);
-        int numOfFirstPlural = answers.getFirstCounterPlural();
-        list.add(numOfFirstPlural);
-        int numOfSecondSingle = answers.getSecondCounterSingle();
-        list.add(numOfSecondSingle);
-        int numOfSecondPlural = answers.getSecondCounterPlural();
-        list.add(numOfSecondPlural);
-        int numOfThirdSingle = answers.getThirdCounterSingle();
-        list.add(numOfThirdSingle);
-        int numOffThirdPlural = answers.getThirdCounterPlural();
-        list.add(numOffThirdPlural);
-        int numOfQWwords = answers1.parserAns();
-        list.add(numOfQWwords);
-        int numOfNegWord = answers2.parserAns();
-        list.add(numOfNegWord);
-        answers4.parserAns();
-        int past = answers4.getPastCounter();
-        list.add(past);
-        int beinoni = answers4.getBeinoniCounter();
-        list.add(beinoni);
-        int future = answers4.getFutureCounter();
-        list.add(future);
-        int imperative = answers4.getImperativeCounter();
-        list.add(imperative);
+            answers.parserAns();
+            int numOfFirstSingle = answers.getFirstCounterSingle();
+            list.add(numOfFirstSingle);
+            int numOfFirstPlural = answers.getFirstCounterPlural();
+            list.add(numOfFirstPlural);
+            int numOfSecondSingle = answers.getSecondCounterSingle();
+            list.add(numOfSecondSingle);
+            int numOfSecondPlural = answers.getSecondCounterPlural();
+            list.add(numOfSecondPlural);
+            int numOfThirdSingle = answers.getThirdCounterSingle();
+            list.add(numOfThirdSingle);
+            int numOffThirdPlural = answers.getThirdCounterPlural();
+            list.add(numOffThirdPlural);
+            int numOfQWwords = answers1.parserAns();
+            list.add(numOfQWwords);
+            int numOfNegWord = answers2.parserAns();
+            list.add(numOfNegWord);
+            answers4.parserAns();
+            int past = answers4.getPastCounter();
+            list.add(past);
+            int beinoni = answers4.getBeinoniCounter();
+            list.add(beinoni);
+            int future = answers4.getFutureCounter();
+            list.add(future);
+            int imperative = answers4.getImperativeCounter();
+            list.add(imperative);
+        } else {
+            for (int i = 0; i < 12; i++)
+                list.add(Integer.MAX_VALUE);
+        }
+        
         int numOfwords = answers3.NumOfWords();
         list.add(numOfwords);
         Map<String, Integer> dictWord = this.dic.parserAns(stroy);
         for (Map.Entry<String, Integer> entry : dictWord.entrySet()) {
            list.add(entry.getValue());
         }
-        return  list;
+        return list;
+    }
+
+    public List<Integer> evaluateText(String stroy) throws IOException, ParseException {
+        List<Integer> list = new ArrayList<>();
+        TextualExtractAns answers3 = new TextualExtractAns(stroy);
+        int numOfwords = answers3.NumOfWords();
+        list.add(numOfwords);
+        Map<String, Integer> dictWord = this.dic.parserAns(stroy);
+        for (Map.Entry<String, Integer> entry : dictWord.entrySet()) {
+           list.add(entry.getValue());
+        }
+        return list;
     }
 
     public Map< String,List<Integer>> processData(List<String> lines) throws IOException, ParseException {
@@ -104,24 +122,38 @@ public class ServerMain {
         List<Integer> numbers = new ArrayList<>();
         numbers.clear();
 
+        Boolean yap = true;
         String output = "";
         int i = 1;
         this.dic.parser();
         for (String line: lines) {
-
             command[7] = "{\"text\": \"" + line + "  \"}";
-            try {
-                while (output.length() == 0) {
-                    output = sendCommand(command);
+            int sec = 0;
+            while (yap && (output.length() == 0) && (sec < 60)) {
+                try {
+                        output = sendCommand(command);
+                        Thread.sleep(1000);
+                    }
+                catch (Exception e) {
+                    if (i < lines.size() / 2) {
+                        System.out.println("Avaluates output without YAP");
+                        yap = false;
+                    }
                 }
-            } catch (Exception e) {}
+                sec++;
+            }
+            if (output.length() == 0) {
+                System.out.println("Avaluates output without YAP");
+                yap = false;
+            }
+            numbers = evaluateOutput(output , line, yap);
             System.out.println("succeeded line number " + i);
-            numbers = evaluateOutput(output , line);
             evlAns.put(line, numbers);
-            
+
             output = "";
             i++;
         }
+
         return evlAns;
     }
 
