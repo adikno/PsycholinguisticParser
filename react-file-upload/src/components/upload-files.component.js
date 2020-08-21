@@ -2,6 +2,10 @@ import React, { Component } from "react";
 import UploadService from "../services/upload-files.service";
 import LoadingSpinner from './LoadingSpinner';
 import "./upload-files.css";
+import before from './brfore.png';
+import after from './after.png';
+import ins from './ins.docx'
+
 
 export default class UploadFiles extends Component {
   constructor(props) {
@@ -46,7 +50,6 @@ export default class UploadFiles extends Component {
 			return UploadService.getFilesToShow(this.state.id);
 		})
 		.then((files) => {
-			console.log(files);
 			this.setState({
 			fileInfos: files.data,
 			loading :false
@@ -55,7 +58,7 @@ export default class UploadFiles extends Component {
 		.catch(() => {
 			this.setState({
 			progress: 0,
-			message: "Could not upload the file!",
+			message: "The file is not in the correct format",
 			currentFile: undefined,
 			});
 		});
@@ -75,11 +78,12 @@ export default class UploadFiles extends Component {
 		  fileInfos,
 		  loading
 		} = this.state;
-
-		console.log(fileInfos);
+		const instructionMessage = progress === 100 ? 'for upload a new file please refresh' : progress === 0 ? 'please upload a file  in .xlsx format , File must not exceed 2Mb.' : ''
 	
 		return (
 		  <div className="upload-file-wrapper">
+			<div className="xlsx">{instructionMessage}</div>
+
 			{currentFile && (
 			  <div className="progress">
 				<div
@@ -104,7 +108,6 @@ export default class UploadFiles extends Component {
 				Upload
 				</button>
 			</div>
-
 			<div className="alert alert-light" role="alert">
 			  {message}
 			</div>
@@ -119,6 +122,19 @@ export default class UploadFiles extends Component {
 					</li>
 				  )}
 			  </ul>
+			</div>
+			<div className='explanation'>
+				
+				{(<a href={ins}>  Click to download Instructions in Hebrew</a>)}	
+				</div>
+				<h5 className='img-title'>
+					example for input and output file			
+				</h5>
+				<div className='images-wrapper'>
+					
+					<img className='before' src={before}/>
+					<img src={after}/>
+
 			</div>
 		  </div>
 		);

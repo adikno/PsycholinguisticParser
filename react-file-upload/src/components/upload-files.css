@@ -11,3 +11,21 @@
 .btn-success{
 	height: 40px;
 }
+.xlsx{
+	padding: 3px 0px;
+}
+.explanation{
+	padding: 30px 0;
+}
+.img-title {
+	align-self: center;
+}
+.images-wrapper {
+	display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding: 20px;
+}
+.before{
+	margin-right: 10px;
+}
