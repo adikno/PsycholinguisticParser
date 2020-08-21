@@ -46,6 +46,9 @@ public class FilesController {
         String id = Integer.toString(rand_int);
         String name = id + "_" + file.getOriginalFilename(); 
         try {
+            if (!(getFileExtension(file.getOriginalFilename()).equals("xlsx"))) {
+                throw new Exception("The file is not in the correct format! should be xlsx.");
+            }
             storageService.save(file, name);
 
             message = "Uploaded the file successfully: " + file.getOriginalFilename();
