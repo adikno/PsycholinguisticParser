@@ -1,5 +1,5 @@
 #!/bin/sh
 
 sleep 1
-cd ../react-file-upload/
-npm start
+cd /var/www/html/natalie/PsychFeatures/PsycholinguisticParser/react-file-upload
+nohup npm start
