@@ -31,8 +31,8 @@ import com.example.demo.message.ResponseMessage;
 import com.example.demo.service.FilesStorageService;
 
 @Controller
-@CrossOrigin("http://localhost:8081")
-//@CrossOrigin("http://132.70.30.35:8080")
+//@CrossOrigin("http://localhost:8081")
+@CrossOrigin("http://132.70.30.35:8080")
 public class FilesController {
 
     @Autowired
