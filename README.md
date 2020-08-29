@@ -6,10 +6,10 @@
 2. install JDK + JRE: https://docs.oracle.com/javase/10/install/installation-jdk-and-jre-linux-platforms.htm#JSJIG-GUID-4A6BD592-1840-4BB4-A758-4CD49E9EE88B 
 
 Run the following commands: (yum install can be repladed by sudo apt-install)
-3. yum install jq
-4. yum install nvm
-5. yum install npm
-6. yum install libcap-devel
+1. yum install jq
+2. yum install nvm
+3. yum install npm
+4. yum install libcap-devel
 
 # Make the following code changes:
 
