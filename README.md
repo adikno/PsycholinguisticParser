@@ -13,12 +13,13 @@ Run the following commands: (yum install can be repladed by sudo apt-install)
 
 # Make the following code changes:
 
-1. Put your external IP instead of 132.70.30.35 in the following files (you can change the ports as well):
-        a. demo 2/src/main/java/com/example/demo/controller/FilesController.java: .
-        b. demo 2/src/main/resources/application.properties
-        c. react-file-upload/.env
-        d. react-file-upload/src/http-common.js
-2. replace the path /home/ANT.AMAZON.COM/adiknob/yapproj/src/yap/yap inside demo 2/server.sh to the YAP path in your computer.
+Put your external IP instead of 132.70.30.35 in the following files (you can change the ports as well):
+1. demo 2/src/main/java/com/example/demo/controller/FilesController.java: .
+2. demo 2/src/main/resources/application.properties
+3. react-file-upload/.env
+4. react-file-upload/src/http-common.js
+
+replace the path /home/ANT.AMAZON.COM/adiknob/yapproj/src/yap/yap inside demo 2/server.sh to the YAP path in your computer.
 
 # For running the app:
 
